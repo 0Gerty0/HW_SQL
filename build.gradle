@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.netology'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'org.testcontainers:testcontainers:1.18.3'
+    testImplementation 'org.testcontainers:mysql:1.18.3'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+}
+
+test {
+    useJUnitPlatform()
+}
