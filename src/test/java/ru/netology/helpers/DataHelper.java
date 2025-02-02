@@ -1,12 +1,17 @@
 package ru.netology.helpers;
 
+import lombok.Value;
+
 public class DataHelper {
-    public static String getValidLogin() {
-        return "vasya";
+
+    @Value
+    public static class AuthInfo {
+        String login;
+        String password;
     }
 
-    public static String getValidPassword() {
-        return "qwerty123";
+    public static AuthInfo getAuthInfo() {
+        return new AuthInfo("vasya", "qwerty123");
     }
 }
 

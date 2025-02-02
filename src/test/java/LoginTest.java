@@ -1,41 +1,37 @@
-package ru.netology.sqltests;
+package ru.netology;
 
-import com.codeborne.selenide.Selenide;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.helpers.DBHelper;
 import ru.netology.helpers.DataHelper;
-import ru.netology.pages.DashboardPage;
 import ru.netology.pages.LoginPage;
-import ru.netology.pages.VerificationPage;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.codeborne.selenide.Selenide.open;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LoginTest {
 
     @BeforeEach
     void setUp() {
-        Selenide.open("http://localhost:9999");
+        open("http://localhost:9999");
     }
 
-    @AfterEach
-    void tearDown() {
-        Selenide.closeWebDriver();
+    @AfterAll
+    static void tearDown() {
+        DBHelper.clearDatabase();
     }
 
     @Test
     void testSuccessfulLogin() {
-        LoginPage loginPage = new LoginPage();
-        VerificationPage verificationPage = loginPage.validLogin(DataHelper.getValidLogin(), DataHelper.getValidPassword());
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo.getLogin(), authInfo.getPassword());
 
-        String authCode = DBHelper.getLatestAuthCode(DataHelper.getValidLogin());
-        if (authCode == null) {
-            throw new RuntimeException("Не найден код авторизации");
-        }
+        var verificationCode = DBHelper.getVerificationCode(authInfo.getLogin());
+        assertNotNull(verificationCode, "Ошибка: код авторизации отсутствует!");
 
-        DashboardPage dashboardPage = verificationPage.validVerify(authCode);
-        assertTrue(dashboardPage.isDashboardVisible(), "Ошибка: вход в систему не выполнен!");
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        dashboardPage.checkDashboardVisible();
     }
 }
-
