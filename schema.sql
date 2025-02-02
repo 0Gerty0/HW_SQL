@@ -1,6 +1,3 @@
--- Убеждаемся, что работаем с правильной базой
-USE test_db;
-
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
 (
